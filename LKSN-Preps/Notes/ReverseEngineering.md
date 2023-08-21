@@ -128,3 +128,59 @@ RIP --->    0x0804013: mov rcx, rax                   RDX = 0x0
 
 
 4. ### Address 
+
+```
+mov rax, [0xabababab] === rax = *0xabababab
+```
+
+
+# GDB (Gnu Debugger - GEF)
+
+### Execute
+```
+gdb [./binary]
+```
+
+### Disassemble Binary
+```
+gdb disass [symbol / function name] => gdb disass main
+
+or 
+
+gdb disass *[address] => gdb disass *0x7fffaaaa
+```
+
+### View Instructions (https://visualgdb.com/gdbreference/commands/x)
+```
+[display_format]/[lines]i [address] [+- offset]
+
+x/10i (display 10 lines of instruction in hex format)
+gef➤  x/10i    0x00000000004011d0
+                0x4011d0 <_start>:   endbr64
+                0x4011d4 <_start+4>: xor    ebp,ebp
+                0x4011d6 <_start+6>: mov    r9,rdx
+                0x4011d9 <_start+9>: pop    rsi
+                0x4011da <_start+10>:        mov    rdx,rsp
+                0x4011dd <_start+13>:        and    rsp,0xfffffffffffffff0
+                0x4011e1 <_start+17>:        push   rax
+                0x4011e2 <_start+18>:        push   rsp
+                0x4011e3 <_start+19>:        mov    r8,0x401640
+                0x4011ea <_start+26>:        mov    rcx,0x4015d0
+```
+
+
+### Setting Breakpoint
+```
+break *address (+- offset)
+or
+break function
+```
+
+### Interacting with instructions
+```
+1. Stepping
+- Continue: Resume the execution of program after break point(s) [default: c]
+- Step Into: Step into number(s) of interactions [default: s (one instruction)]
+- Next Instruction / step over: Jump into the next instruction (skipping the instruction)
+- Finish: Finish the execution of the binary after return.
+```
