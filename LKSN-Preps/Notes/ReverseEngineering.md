@@ -133,6 +133,13 @@ RIP --->    0x0804013: mov rcx, rax                   RDX = 0x0
 mov rax, [0xabababab] === rax = *0xabababab
 ```
 
+# Disassembler
+
+- IDA
+- Binary Ninja 
+- gdb
+- Radare2
+- Hopper
 
 # GDB (Gnu Debugger - GEF)
 
@@ -181,6 +188,72 @@ break function
 1. Stepping
 - Continue: Resume the execution of program after break point(s) [default: c]
 - Step Into: Step into number(s) of interactions [default: s (one instruction)]
-- Next Instruction / step over: Jump into the next instruction (skipping the instruction)
-- Finish: Finish the execution of the binary after return.
+- Next Instruction / step over: Jump into the next instruction (skipping the instruction) [default: ni]
+- Finish: Finish the execution of the binary after return. [default: fin]
 ```
+
+```
+2. Examining
+Could be used to examine / show any address/registry/symbol
+
+x/#[size][format] [address][+- offset]
+
+size: (1-xxx) number
+
+format: 
+- x: hexadecimal
+- s: string
+- gs: giant string
+- i: instruction
+
+address: the address that we want to examine
+
+offset: + or - (1-xxxx) number
+
+Example:
+
+x/10s *0x7fffdeadbeef: will return 10 string from the address
+x/i *0x7fffcafecafe: will return 1 instruction from the address 
+```
+
+```
+3. Setting data
+You could set data on register with this command:
+
+set [address/register]=[value (hexadecimal)]
+
+set 0x7fffcafecafe=0x1 -> will set value 0x1 to 0x7fffcafecafe
+set $rax=0x0 -> will set 0x0 to $rax register
+
+```
+
+```
+4. Process Mapping
+Will find mapping on process's mapped address with `info proc map` which will give you libc address position, stack and heap.
+
+Mapped address spaces:
+
+    Start Addr   End Addr       Size     Offset objfile
+     0x8048000  0x8049000     0x1000        0x0 /directory/program
+     0x8049000  0x804a000     0x1000        0x0 /directory/program
+     0x804a000  0x804b000     0x1000     0x1000 /directory/program
+    0xf75cb000 0xf75cc000     0x1000        0x0
+    0xf75cc000 0xf7779000   0x1ad000        0x0 /lib32/libc-2.23.so
+    0xf7779000 0xf777b000     0x2000   0x1ac000 /lib32/libc-2.23.so
+    0xf777b000 0xf777c000     0x1000   0x1ae000 /lib32/libc-2.23.so
+    0xf777c000 0xf7780000     0x4000        0x0
+    0xf778b000 0xf778d000     0x2000        0x0 [vvar]
+    0xf778d000 0xf778f000     0x2000        0x0 [vdso]
+    0xf778f000 0xf77b1000    0x22000        0x0 /lib32/ld-2.23.so
+    0xf77b1000 0xf77b2000     0x1000        0x0
+    0xf77b2000 0xf77b3000     0x1000    0x22000 /lib32/ld-2.23.so
+    0xf77b3000 0xf77b4000     0x1000    0x23000 /lib32/ld-2.23.so
+    0xffc59000 0xffc7a000    0x21000        0x0 [stack]
+```
+
+```
+5. Dynamic Debugging
+Attach process with attach [pid] or you could start with gdb -p [pid]
+```
+
+
